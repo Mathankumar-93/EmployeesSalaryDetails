@@ -1,0 +1,128 @@
+Table:SALGRADE
++--------+--------+-------+
+| sgrade | salary | hra   |
++--------+--------+-------+
+| s01    |  56000 | 18000 |
+| s02    |  32000 | 12000 |
+| s03    |  24000 |  8000 |
++--------+--------+-------+
+Table:EMPLOYEE
++-------+--------------+--------------+--------+------------+------------+
+| ecode | name         | desig        | sgrade | doj        | dob        |
++-------+--------------+--------------+--------+------------+------------+
+|   101 | vikrant      | executive    | s03    | 2003-03-23 | 1980-01-13 |
+|   102 | ravi         | head-it      | s02    | 2010-02-12 | 1987-07-22 |
+|   103 | john cena    | receptionist | s03    | 2009-06-24 | 1983-02-24 |
+|   105 | azhar ansari | gm           | s02    | 2009-08-11 | 1984-03-03 |
+|   108 | priyam sen   | ceo          | s01    | 2004-12-29 | 1982-01-19 |
++-------+--------------+--------------+--------+------------+------------+
+MySQL Queries:
+
+1.To Display all details of all EMPLOYEE in Decending order of their doj
+Ans:mysql> select * from employee
+    -> order by doj desc;
++-------+--------------+--------------+--------+------------+------------+
+| ecode | name         | desig        | sgrade | doj        | dob        |
++-------+--------------+--------------+--------+------------+------------+
+|   102 | ravi         | head-it      | s02    | 2010-02-12 | 1987-07-22 |
+|   105 | azhar ansari | gm           | s02    | 2009-08-11 | 1984-03-03 |
+|   103 | john cena    | receptionist | s03    | 2009-06-24 | 1983-02-24 |
+|   108 | priyam sen   | ceo          | s01    | 2004-12-29 | 1982-01-19 |
+|   101 | vikrant      | executive    | s03    | 2003-03-23 | 1980-01-13 |
++-------+--------------+--------------+--------+------------+------------+
+
+2.To Display name and desig of those employees whose grade is either s02 or s03
+
+Ans:mysql> select name,desig from employee
+        -> where sgrade in ('s02','s03');
++--------------+--------------+
+| name         | desig        |
++--------------+--------------+
+| vikrant      | executive    |
+| ravi         | head-it      |
+| john cena    | receptionist |
+| azhar ansari | gm           |
++--------------+--------------+ 
+
+3.To Display name,desig,sgrade of those employee who joined in the year 2009
+
+Ans:mysql> select name,desig,sgrade from employee
+    -> where year(doj) = '2009';
++--------------+--------------+--------+
+| name         | desig        | sgrade |
++--------------+--------------+--------+
+| john cena    | receptionist | s03    |
+| azhar ansari | gm           | s02    |
++--------------+--------------+--------+
+
+4.To Display all sgrade,Annual salary from table SALGRADE where Annual_salary = salary*12
+
+Ans:mysql> select sgrade,salary * 12 as Annual_salary from salgrade;
++--------+---------------+
+| sgrade | Annual_salary |
++--------+---------------+
+| s01    |        672000 |
+| s02    |        384000 |
+| s03    |        288000 |
++--------+---------------+
+
+5.To Display no.of employee working in each salgrade from table employee
+
+Ans:mysql> select sgrade, count(*) as no_of_employee from employee
+        -> group by sgrade;
++--------+----------------+
+| sgrade | no_of_employee |
++--------+----------------+
+| s01    |              1 |
+| s02    |              2 |
+| s03    |              2 |
++--------+----------------+
+
+6.To Display name,desig,salary,hra from tables EMPLOYEE and SALGRADE where salary is 
+less than 50000
+
+Ans:mysql> select name,desig,salary,hra from employee
+    -> join salgrade on
+    -> employee.sgrade = salgrade.sgrade
+    -> where salary < 50000;
++--------------+--------------+--------+-------+
+| name         | desig        | salary | hra   |
++--------------+--------------+--------+-------+
+| ravi         | head-it      |  32000 | 12000 |
+| azhar ansari | gm           |  32000 | 12000 |
+| vikrant      | executive    |  24000 |  8000 |
+| john cena    | receptionist |  24000 |  8000 |
++--------------+--------------+--------+-------+
+
+7.mysql> select min(doj),max(dob) from employee;
++------------+------------+
+| min(doj)   | max(dob)   |
++------------+------------+
+| 2003-03-23 | 1987-07-22 |
++------------+------------+
+
+8.mysql> select sgrade,salary+hra from salgrade
+    -> where sgrade = 's02';
++--------+------------+
+| sgrade | salary+hra |
++--------+------------+
+| s02    |      44000 |
++--------+------------+
+
+9.mysql> select count(distinct sgrade) as total_grades from employee;
++--------------+
+| total_grades |
++--------------+
+|            3 |
++--------------+
+
+10.mysql> select sum(salary),avg(salary) from salgrade;
++-------------+-------------+
+| sum(salary) | avg(salary) |
++-------------+-------------+
+|      112000 |  37333.3333 |
++-------------+-------------+
+
+
+
+
